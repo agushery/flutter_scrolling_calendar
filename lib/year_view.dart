@@ -5,24 +5,24 @@ import 'package:scrolling_years_calendar/year_title.dart';
 
 class YearView extends StatelessWidget {
   const YearView({
-    @required this.context,
-    @required this.year,
-    @required this.currentDateColor,
+    required this.context,
+    required this.year,
+    required this.onMonthTap,
+    required this.monthTitleStyle,
     this.highlightedDates,
-    this.highlightedDateColor,
-    this.monthNames,
-    this.onMonthTap,
-    this.monthTitleStyle,
+    this.dateStyle,
+    this.currentDateStyle,
+    this.highlightedDateStyle,
   });
 
   final BuildContext context;
   final int year;
-  final Color currentDateColor;
-  final List<DateTime> highlightedDates;
-  final Color highlightedDateColor;
-  final List<String> monthNames;
+  final List<DateTime>? highlightedDates;
   final Function onMonthTap;
   final TextStyle monthTitleStyle;
+  final TextStyle? dateStyle;
+  final TextStyle? currentDateStyle;
+  final TextStyle? highlightedDateStyle;
 
   double get horizontalMargin => 16.0;
   double get monthViewPadding => 8.0;
@@ -38,12 +38,12 @@ class YearView extends StatelessWidget {
           year: year,
           month: month,
           padding: monthViewPadding,
-          currentDateColor: currentDateColor,
+          currentDateStyle: currentDateStyle,
           highlightedDates: highlightedDates,
-          highlightedDateColor: highlightedDateColor,
-          monthNames: monthNames,
+          highlightedDateStyle: highlightedDateStyle,
           onTap: onMonthTap,
           titleStyle: monthTitleStyle,
+          dateStyle: dateStyle,
         ),
       );
 
@@ -52,7 +52,7 @@ class YearView extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: List<MonthView>.from(monthRowChildren),
+            children: List<MonthView>.of(monthRowChildren),
           ),
         );
         monthRowChildren.clear();
@@ -60,7 +60,7 @@ class YearView extends StatelessWidget {
     }
 
     return Column(
-      children: List<Row>.from(monthRows),
+      children: List<Row>.of(monthRows),
     );
   }
 
@@ -68,10 +68,9 @@ class YearView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: getYearViewHeight(context),
-      padding: const EdgeInsets.only(top: 16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
+        children: [
           Container(
             margin: EdgeInsets.symmetric(
               horizontal: horizontalMargin,
@@ -85,9 +84,7 @@ class YearView extends StatelessWidget {
               right: horizontalMargin,
               top: 8.0,
             ),
-            child: Divider(
-              color: Colors.black26,
-            ),
+            child: const Divider(color: Colors.black26),
           ),
           Container(
             margin: EdgeInsets.symmetric(

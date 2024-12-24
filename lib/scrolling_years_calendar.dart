@@ -6,43 +6,35 @@ import 'package:scrolling_years_calendar/year_view.dart';
 
 class ScrollingYearsCalendar extends StatefulWidget {
   ScrollingYearsCalendar({
-    @required this.context,
-    @required this.initialDate,
-    @required this.firstDate,
-    @required this.lastDate,
-    @required this.currentDateColor,
+    required this.context,
+    required this.initialDate,
+    required this.firstDate,
+    required this.lastDate,
+    required this.currentDateColor,
+    required this.onMonthTap,
+    required this.monthTitleStyle,
     this.highlightedDates,
-    this.highlightedDateColor,
-    this.monthNames,
-    this.onMonthTap,
-    this.monthTitleStyle,
-  })  : assert(context != null),
-        assert(initialDate != null),
-        assert(firstDate != null),
-        assert(lastDate != null),
-        assert(!initialDate.isBefore(firstDate),
+    this.dateStyle,
+    this.currentDateStyle,
+    this.highlightedDateStyle,
+  })  : assert(!initialDate.isBefore(firstDate),
             'initialDate must be on or after firstDate'),
         assert(!initialDate.isAfter(lastDate),
             'initialDate must be on or before lastDate'),
         assert(!firstDate.isAfter(lastDate),
-            'lastDate must be on or after firstDate'),
-        assert(currentDateColor != null),
-        assert(highlightedDates == null || highlightedDateColor != null,
-            'highlightedDateColor is required if highlightedDates is not null'),
-        assert(
-            monthNames == null || monthNames.length == DateTime.monthsPerYear,
-            'monthNames must contain all months of the year');
+            'lastDate must be on or after firstDate');
 
   final BuildContext context;
   final DateTime initialDate;
   final DateTime firstDate;
   final DateTime lastDate;
   final Color currentDateColor;
-  final List<DateTime> highlightedDates;
-  final Color highlightedDateColor;
-  final List<String> monthNames;
+  final List<DateTime>? highlightedDates;
   final Function onMonthTap;
   final TextStyle monthTitleStyle;
+  final TextStyle? dateStyle;
+  final TextStyle? currentDateStyle;
+  final TextStyle? highlightedDateStyle;
 
   @override
   _ScrollingYearsCalendarState createState() => _ScrollingYearsCalendarState();
@@ -54,12 +46,12 @@ class _ScrollingYearsCalendarState extends State<ScrollingYearsCalendar> {
     return YearView(
       context: context,
       year: year,
-      currentDateColor: widget.currentDateColor,
       highlightedDates: widget.highlightedDates,
-      highlightedDateColor: widget.highlightedDateColor,
-      monthNames: widget.monthNames,
       onMonthTap: widget.onMonthTap,
       monthTitleStyle: widget.monthTitleStyle,
+      currentDateStyle: widget.currentDateStyle,
+      dateStyle: widget.dateStyle,
+      highlightedDateStyle: widget.highlightedDateStyle,
     );
   }
 
@@ -67,7 +59,7 @@ class _ScrollingYearsCalendarState extends State<ScrollingYearsCalendar> {
   Widget build(BuildContext context) {
     final int _itemCount = widget.lastDate.year - widget.firstDate.year + 1;
 
-    // Makes sure the right initial offset is calculated so the listview
+    // Makes sure the right initial offset is calculated so the list view
     // jumps to the initial year.
     final double _initialOffset =
         (widget.initialDate.year - widget.firstDate.year) *

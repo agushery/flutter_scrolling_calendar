@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 /// Checks if the given date is equal to the current date.
 bool isCurrentDate(DateTime date) {
   final DateTime now = DateTime.now();
@@ -5,10 +7,19 @@ bool isCurrentDate(DateTime date) {
 }
 
 /// Checks if the given date is a highlighted date.
-bool isHighlightedDate(DateTime date, List<DateTime> highlightedDates) {
-  return highlightedDates.any((DateTime highlightedDate) =>
-      date.isAtSameMomentAs(DateTime(
-          highlightedDate.year, highlightedDate.month, highlightedDate.day)));
+bool isHighlightedDate(DateTime date, List<DateTime>? highlightedDates) {
+  return highlightedDates?.any((DateTime highlightedDate) =>
+          date.isAtSameMomentAs(DateTime(highlightedDate.year,
+              highlightedDate.month, highlightedDate.day))) ??
+      false;
+}
+
+/// Checks if the given date falls within any of the highlighted date ranges.
+bool isDateInRange(DateTime date, List<DateTimeRange> dateRanges) {
+  return dateRanges.any((DateTimeRange range) =>
+      date.isAfter(range.start) && date.isBefore(range.end) ||
+      date.isAtSameMomentAs(range.start) ||
+      date.isAtSameMomentAs(range.end));
 }
 
 /// Gets the number of days for the given month,
@@ -21,7 +32,7 @@ int getDaysInMonth(int year, int month) {
 
 /// Gets the name of the given month by its number,
 /// using either the supplied or default name.
-String getMonthName(int month, {List<String> monthNames}) {
+String getMonthName(int month, {List<String>? monthNames}) {
   final List<String> names = monthNames ??
       <String>[
         'Jan',

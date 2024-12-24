@@ -14,13 +14,6 @@ class MyApp extends StatelessWidget {
 }
 
 class HomePage extends StatelessWidget {
-  List<DateTime> getHighlightedDates() {
-    return List<DateTime>.generate(
-      10,
-      (int index) => DateTime.now().add(Duration(days: 10 * (index + 1))),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,38 +22,38 @@ class HomePage extends StatelessWidget {
       ),
       body: Center(
         child: ScrollingYearsCalendar(
-          // Required parameters
           context: context,
           initialDate: DateTime.now(),
-          firstDate: DateTime.now().subtract(const Duration(days: 5 * 365)),
-          lastDate: DateTime.now(),
+          firstDate: DateTime(2000),
+          lastDate: DateTime(2030),
           currentDateColor: Colors.blue,
-
-          // Optional parameters
-          highlightedDates: getHighlightedDates(),
-          highlightedDateColor: Colors.deepOrange,
-          monthNames: const <String>[
-            'Jan',
-            'Feb',
-            'Mar',
-            'Apr',
-            'May',
-            'Jun',
-            'Jul',
-            'Aug',
-            'Sep',
-            'Oct',
-            'Nov',
-            'Dec',
-          ],
-          onMonthTap: (int year, int month) => print('Tapped $month/$year'),
-          monthTitleStyle: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-            color: Colors.blue,
-          ),
+          highlightedDates: generateHighlightedDates(),
+          onMonthTap: (int year, int month) {
+            print('Tapped on month: $month, year: $year');
+          },
+          monthTitleStyle: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          dateStyle: TextStyle(fontSize: 8),
+          currentDateStyle: TextStyle(fontSize: 12, color: Colors.red),
+          highlightedDateStyle: TextStyle(fontSize: 8, color: Colors.green),
         ),
       ),
     );
   }
+}
+
+List<DateTime> generateHighlightedDates() {
+  final DateTime now = DateTime.now();
+  final DateTime oneMonthBefore = DateTime(now.year, now.month - 1, now.day);
+  final DateTime oneMonthAfter = DateTime(now.year, now.month + 1, now.day);
+
+  List<DateTime> highlightedDates = [];
+  DateTime currentDate = oneMonthBefore;
+
+  while (currentDate.isBefore(oneMonthAfter) ||
+      currentDate.isAtSameMomentAs(oneMonthAfter)) {
+    highlightedDates.add(currentDate);
+    currentDate = currentDate.add(Duration(days: 1));
+  }
+
+  return highlightedDates;
 }
